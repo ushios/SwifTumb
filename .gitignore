@@ -63,3 +63,11 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
+
+# Swift Package manager
+#
+
+.DS_Store
+/.build
+/Packages
+/*.xcodeproj
