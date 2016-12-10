@@ -9,13 +9,13 @@
 import XCTest
 @testable import SwifTumb
 
-class SwifTumbTests: XCTestCase {
+class AlamofireAdapterTests: XCTestCase {
     func testExample() {
         XCTAssertEqual("Hello, World!", "Hello, World!")
     }
-
-
-    static var allTests : [(String, (SwifTumbTests) -> () throws -> Void)] {
+    
+    
+    static var allTests : [(String, (AlamofireAdapterTests) -> () throws -> Void)] {
         return [
             ("testExample", testExample),
         ]
