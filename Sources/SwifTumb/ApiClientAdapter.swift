@@ -26,7 +26,7 @@ class OAuthSwiftAdapter {
     
     private var consumerKey: String
     private var consumerSecret: String
-    private var oauthswift: OAuthSwift
+    private var oauthswift: OAuth1Swift
     private var handle: OAuthSwiftRequestHandle?
     
     init(consumerKey: String, consumerSecret: String) {
@@ -41,7 +41,17 @@ class OAuthSwiftAdapter {
             accessTokenUrl: self.AccessTokenUrl
         )
         
-        self.handle = self.oauthswift
+        self.handle = self.oauthswift.authorize(
+            withCallbackURL: URL(string: "oauth-swift://oauth-callback/tumblr")!,
+            success: { credential, response, parameters in
+                print(credential.oauthToken)
+                print(credential.oauthTokenSecret)
+                print(parameters["user_id"] ?? "nothing")
+            },
+            failure: { error in
+                print(error.localizedDescription)
+            }
+        )
     }
     
     convenience init() {
