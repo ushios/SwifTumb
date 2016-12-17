@@ -7,20 +7,40 @@
 //
 
 import XCTest
+import OAuthSwift
 @testable import SwifTumb
 
 class OAuthSwiftAdapterTests: XCTestCase {
-    func testCreate() {
-        let adapter: OAuthSwiftAdapter = OAuthSwiftAdapter(
-            consumerKey: "",
-            consumerSecret: ""
+    static let ConsumerKey: String = ""
+    static let ConsumerSecret: String = ""
+    static let OAuthToken: String = ""
+    static let OAuthTokenSecret: String = ""
+    
+    
+    var adapter: OAuthSwiftAdapter?
+    
+    override func setUp() {
+        super.setUp()
+        self.adapter = OAuthSwiftAdapter(
+            consumerKey: OAuthSwiftAdapterTests.ConsumerKey,
+            consumerSecret: OAuthSwiftAdapterTests.ConsumerSecret,
+            oauthToken: OAuthSwiftAdapterTests.OAuthToken,
+            oauthTokenSecret: OAuthSwiftAdapterTests.OAuthTokenSecret
         )
-        XCTAssertNotNil(adapter)
+    }
+    
+    override func tearDown() {
+        self.adapter = nil
+        super.tearDown()
+    }
+    
+    func testAuthorize() {
+        
     }
     
     static var allTests : [(String, (OAuthSwiftAdapterTests) -> () throws -> Void)] {
         return [
-            ("testCreate", testCreate),
+            ("testAuthorize", testAuthorize),
         ]
     }
 }

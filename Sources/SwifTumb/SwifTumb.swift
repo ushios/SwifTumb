@@ -26,4 +26,7 @@ open class SwifTumb {
         return "\(SwifTumb.DefaultProtocol)://\(SwifTumb.DefaultHost)/\(SwifTumb.DefaultVersion)"
     }
     
+    open static func url(_ path: String) -> String {
+        return "\(SwifTumb.baseUrl())/\(path)"
+    }
 }

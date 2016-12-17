@@ -10,14 +10,21 @@ import XCTest
 @testable import SwifTumb
 
 class SwifTumbTests: XCTestCase {
-    func testExample() {
-        XCTAssertEqual("Hello, World!", "Hello, World!")
+    func testBaseUrl() {
+        let url: String = SwifTumb.baseUrl()
+        XCTAssertEqual(url, "https://api.tumblr.com/v2")
+    }
+    
+    func testUrl() {
+        let url: String = SwifTumb.url("test.json")
+        XCTAssertEqual(url, "https://api.tumblr.com/v2/test.json")
     }
 
 
     static var allTests : [(String, (SwifTumbTests) -> () throws -> Void)] {
         return [
-            ("testExample", testExample),
+            ("testBaseUrl", testBaseUrl),
+            ("testUrl", testUrl),
         ]
     }
 }
