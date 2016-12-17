@@ -9,16 +9,20 @@
 import Foundation
 import OAuthSwift
 
-protocol ApiClientAdapter {
-    func get(path: String) -> String
+struct Credentials {
+    var consumerKey: String
+    var consumerSecret: String
+    var token: String?
+    var tokenSecret: String?
+}
+
+protocol OAuthAdapter {
+    func get() -> Credentials
 }
 
 class OAuthSwiftAdapter {
     private static let EnvKeyConsumerKey: String = "SWIFTUMB_CONSUMER_KEY"
     private static let EnvKeyConsumerSecret: String = "SWIFTUMB_CONSUMER_SECRET"
-    
-    private let Host: String = "api.tumblr.com"
-    private let Version: String = "v2"
     
     private let RequestTokenUrl: String = "https://www.tumblr.com/oauth/request_token"
     private let AuthorizeUrl: String = "https://www.tumblr.com/oauth/authorize"
@@ -40,29 +44,12 @@ class OAuthSwiftAdapter {
             authorizeUrl: self.AuthorizeUrl,
             accessTokenUrl: self.AccessTokenUrl
         )
-        
-        self.handle = self.oauthswift.authorize(
-            withCallbackURL: URL(string: "oauth-swift://oauth-callback/tumblr")!,
-            success: { credential, response, parameters in
-                print(credential.oauthToken)
-                print(credential.oauthTokenSecret)
-                print(parameters["user_id"] ?? "nothing")
-            },
-            failure: { error in
-                print(error.localizedDescription)
-            }
-        )
     }
     
     convenience init() {
         let key = getEnvironmentVar(name: OAuthSwiftAdapter.EnvKeyConsumerKey) ?? ""
         let secret = getEnvironmentVar(name: OAuthSwiftAdapter.EnvKeyConsumerSecret) ?? ""
-        
         self.init(consumerKey: key, consumerSecret: secret)
-    }
-    
-    public func baseUrl() -> String {
-        return self.Host + "/" + self.Version
     }
 }
 
