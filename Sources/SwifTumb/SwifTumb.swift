@@ -9,44 +9,21 @@
 import Foundation
 
 open class SwifTumb {
-    var consumerKey: String
-    var consumerSecret: String
-    var token: String
-    var tokenSecret: String
+    public static let DefaultProtocol: String = "https"
+    public static let DefaultHost: String = "api.tumblr.com"
+    public static let DefaultVersion: String = "v2"
+    public static let RequestTokenUrl: String = "https://www.tumblr.com/oauth/request_token"
+    public static let AuthorizeUrl: String = "https://www.tumblr.com/oauth/authorize"
+    public static let AccessTokenUrl: String = "https://www.tumblr.com/oauth/access_token"
     
-    var client: SwifTumbClient
+    private var adapter: OAuthAdapter
     
-    required public init(
-        client: SwifTumbClient?,
-        consumerKey: String,
-        consumerSecret: String,
-        token: String,
-        tokenSecret: String)
-    {
-        self.consumerKey = consumerKey
-        self.consumerSecret = consumerSecret
-        self.token = token
-        self.tokenSecret = tokenSecret
-        
-        self.client = client ?? AlmofileClient()
+    init(adapter: OAuthAdapter) {
+        self.adapter = adapter
     }
     
-    convenience init(client: SwifTumbClient?, credentials: Credentials) {
-        self.init(
-            client: client,
-            consumerKey: credentials.consumerKey,
-            consumerSecret: credentials.consumerSecret,
-            token: credentials.token ?? "",
-            tokenSecret: credentials.tokenSecret ?? ""
-        )
-    }
-    
-    convenience init(client: SwifTumbClient?, adapter: OAuthAdapter) {
-        let credentials: Credentials = adapter.get()
-        self.init(
-            client: client,
-            credentials: credentials
-        )
+    open static func baseUrl() -> String {
+        return "\(SwifTumb.DefaultProtocol)://\(SwifTumb.DefaultHost)/\(SwifTumb.DefaultVersion)"
     }
     
 }
