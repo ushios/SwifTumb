@@ -41,4 +41,28 @@ open class OAuthSwiftAdapter: OAuth1Swift {
             oauthTokenSecret: ""
         )
     }
+    
+    func request(
+        _ urlString: String,
+        method: OAuthSwiftHTTPRequest.Method,
+        parameters: OAuthSwift.Parameters = [:],
+        headers: OAuthSwift.Headers? = nil,
+        body: Data? = nil,
+        checkTokenExpiration: Bool = true,
+        success: OAuthSwiftHTTPRequest.SuccessHandler?,
+        failure: OAuthSwiftHTTPRequest.FailureHandler?
+    ) -> SwifTumbRequestHandle? {
+        let request: OAuthSwiftRequestHandle? = self.client.request(
+            urlString,
+            method: method,
+            success: success,
+            failure: failure
+        )
+        
+        return request as! OAuthSwiftAdapterRequestHandle?
+    }
+}
+
+open class OAuthSwiftAdapterRequestHandle: OAuthSwiftHTTPRequest, SwifTumbRequestHandle {
+    
 }

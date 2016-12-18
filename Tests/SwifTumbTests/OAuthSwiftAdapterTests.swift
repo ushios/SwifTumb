@@ -34,13 +34,24 @@ class OAuthSwiftAdapterTests: XCTestCase {
         super.tearDown()
     }
     
-    func testAuthorize() {
+    func testGetApi() {
+        let responseExpectation = self.expectation(description: "get followings")
         
+        let url: String = SwifTumb.url("user/info")
+        let handle: OAuthSwiftRequestHandle? = self.adapter!.client.get(url, success: { (resp: OAuthSwiftResponse) in
+            XCTAssertNotNil(resp.dataString())
+            responseExpectation.fulfill()
+        }) { (err: OAuthSwiftError) in
+            XCTAssertNotNil(err)
+        }
+        XCTAssertNotNil(handle)
+        
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
     
     static var allTests : [(String, (OAuthSwiftAdapterTests) -> () throws -> Void)] {
         return [
-            ("testAuthorize", testAuthorize),
+            ("testGetApi", testGetApi),
         ]
     }
 }
