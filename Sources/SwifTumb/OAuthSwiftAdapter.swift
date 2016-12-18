@@ -10,7 +10,7 @@ import Foundation
 import OAuthSwift
 
 public protocol OAuthAdapter {
-    
+    func userInfo() -> SwifTumbRequestHandle
 }
 
 open class OAuthSwiftAdapter: OAuth1Swift {
@@ -42,7 +42,30 @@ open class OAuthSwiftAdapter: OAuth1Swift {
         )
     }
     
-    func request(
+    private func swiftumbRequest(
+        _ urlString: String,
+        method: OAuthSwiftHTTPRequest.Method,
+        parameters: OAuthSwift.Parameters = [:],
+        headers: OAuthSwift.Headers? = nil,
+        body: Data? = nil,
+        checkTokenExpiration: Bool = true,
+        success: SwifTumbHttpRequest.SuccessHandler?,
+        failure: SwifTumbHttpRequest.FailureHandler?
+    ) -> SwifTumbRequestHandle? {
+        return self.request(
+            urlString,
+            method: method,
+            success: { (response: OAuthSwiftResponse) in
+                let meta: Meta = Meta(status: 200, msg: "hoge")
+                success!(SwifTumbResponse(meta: meta, response: nil))
+            },
+            failure: { (err: OAuthSwiftError) in
+                failure!(OAuthSwiftAdapterError())
+            }
+        )
+    }
+    
+    private func request(
         _ urlString: String,
         method: OAuthSwiftHTTPRequest.Method,
         parameters: OAuthSwift.Parameters = [:],
@@ -61,6 +84,10 @@ open class OAuthSwiftAdapter: OAuth1Swift {
         
         return OAuthSwiftAdapterRequestHandle(handle: handle)
     }
+}
+
+open class OAuthSwiftAdapterError: SwifTumbError {
+    
 }
 
 open class OAuthSwiftAdapterRequestHandle: SwifTumbRequestHandle {

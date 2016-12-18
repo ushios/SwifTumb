@@ -7,10 +7,17 @@
 //
 
 import Foundation
+import OAuthSwift
 
 public protocol SwifTumbRequestHandle {
     func cancel()
 }
 
-public typealias SuccessHandler = (_ response: OAuthSwiftResponse) -> Void
-public typealias FailureHandler = (_ error: OAuthSwiftError) -> Void
+public protocol SwifTumbError {
+    
+}
+
+open class SwifTumbHttpRequest {
+    public typealias SuccessHandler = (_ response: SwifTumbResponse) -> Void
+    public typealias FailureHandler = (_ error: SwifTumbError) -> Void
+}
