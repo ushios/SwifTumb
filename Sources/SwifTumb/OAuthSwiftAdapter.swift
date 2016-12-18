@@ -52,17 +52,29 @@ open class OAuthSwiftAdapter: OAuth1Swift {
         success: OAuthSwiftHTTPRequest.SuccessHandler?,
         failure: OAuthSwiftHTTPRequest.FailureHandler?
     ) -> SwifTumbRequestHandle? {
-        let request: OAuthSwiftRequestHandle? = self.client.request(
+        let handle: OAuthSwiftRequestHandle? = self.client.request(
             urlString,
             method: method,
             success: success,
             failure: failure
         )
         
-        return request as! OAuthSwiftAdapterRequestHandle?
+        return OAuthSwiftAdapterRequestHandle(handle: handle)
     }
 }
 
-open class OAuthSwiftAdapterRequestHandle: OAuthSwiftHTTPRequest, SwifTumbRequestHandle {
+open class OAuthSwiftAdapterRequestHandle: SwifTumbRequestHandle {
+    var handle: OAuthSwiftRequestHandle
     
+    init? (handle: OAuthSwiftRequestHandle?) {
+        if handle == nil {
+            return nil
+        }
+        
+        self.handle = handle!
+    }
+    
+    open func cancel() {
+        self.handle.cancel()
+    }
 }
