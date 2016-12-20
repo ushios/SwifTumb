@@ -8,12 +8,22 @@
 
 import Foundation
 import OAuthSwift
+import SwiftyJSON
 
 public protocol OAuthAdapter {
-    func userInfo() -> SwifTumbRequestHandle
+    func request(
+        _ urlString: String,
+        method: SwifTumbHttpRequest.Method,
+        parameters: SwifTumb.Parameters,
+        headers: SwifTumb.Headers?,
+        body: Data?,
+        checkTokenExpiration: Bool,
+        success: SwifTumbHttpRequest.SuccessHandler?,
+        failure: SwifTumbHttpRequest.FailureHandler?
+    ) -> SwifTumbRequestHandle?
 }
 
-open class OAuthSwiftAdapter: OAuth1Swift {
+open class OAuthSwiftAdapter: OAuth1Swift, OAuthAdapter {
     
     public init(
         consumerKey: String,
@@ -41,20 +51,24 @@ open class OAuthSwiftAdapter: OAuth1Swift {
             oauthTokenSecret: ""
         )
     }
-    
-    private func swiftumbRequest(
+
+    public func request(
         _ urlString: String,
-        method: OAuthSwiftHTTPRequest.Method,
-        parameters: OAuthSwift.Parameters = [:],
-        headers: OAuthSwift.Headers? = nil,
+        method: SwifTumbHttpRequest.Method,
+        parameters: SwifTumb.Parameters = [:],
+        headers: SwifTumb.Headers? = nil,
         body: Data? = nil,
         checkTokenExpiration: Bool = true,
         success: SwifTumbHttpRequest.SuccessHandler?,
         failure: SwifTumbHttpRequest.FailureHandler?
     ) -> SwifTumbRequestHandle? {
-        return self.request(
+        let handle: OAuthSwiftRequestHandle? = self.client.request(
             urlString,
-            method: method,
+            method: self.method(method: method),
+            parameters: parameters,
+            headers: headers,
+            body:body,
+            checkTokenExpiration: checkTokenExpiration,
             success: { (response: OAuthSwiftResponse) in
                 let meta: Meta = Meta(status: 200, msg: "hoge")
                 success!(SwifTumbResponse(meta: meta, response: nil))
@@ -63,26 +77,25 @@ open class OAuthSwiftAdapter: OAuth1Swift {
                 failure!(OAuthSwiftAdapterError())
             }
         )
-    }
-    
-    private func request(
-        _ urlString: String,
-        method: OAuthSwiftHTTPRequest.Method,
-        parameters: OAuthSwift.Parameters = [:],
-        headers: OAuthSwift.Headers? = nil,
-        body: Data? = nil,
-        checkTokenExpiration: Bool = true,
-        success: OAuthSwiftHTTPRequest.SuccessHandler?,
-        failure: OAuthSwiftHTTPRequest.FailureHandler?
-    ) -> SwifTumbRequestHandle? {
-        let handle: OAuthSwiftRequestHandle? = self.client.request(
-            urlString,
-            method: method,
-            success: success,
-            failure: failure
-        )
         
         return OAuthSwiftAdapterRequestHandle(handle: handle)
+    }
+    
+    private func method(method: SwifTumbHttpRequest.Method) -> OAuthSwiftHTTPRequest.Method {
+        switch method {
+        case SwifTumbHttpRequest.Method.GET:
+            return OAuthSwiftHTTPRequest.Method.GET
+        case SwifTumbHttpRequest.Method.POST:
+            return OAuthSwiftHTTPRequest.Method.POST
+        case SwifTumbHttpRequest.Method.PUT:
+            return OAuthSwiftHTTPRequest.Method.PUT
+        case SwifTumbHttpRequest.Method.DELETE:
+            return OAuthSwiftHTTPRequest.Method.DELETE
+        case SwifTumbHttpRequest.Method.PATCH:
+            return OAuthSwiftHTTPRequest.Method.PATCH
+        case SwifTumbHttpRequest.Method.HEAD:
+            return OAuthSwiftHTTPRequest.Method.HEAD
+        }
     }
 }
 

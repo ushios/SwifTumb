@@ -30,3 +30,9 @@ open class SwifTumb {
         return "\(SwifTumb.baseUrl())/\(path)"
     }
 }
+
+
+extension SwifTumb {
+    public typealias Parameters = [String : Any]
+    public typealias Headers = [String : String]
+}

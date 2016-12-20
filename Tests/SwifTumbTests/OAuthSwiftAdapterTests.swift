@@ -39,6 +39,7 @@ class OAuthSwiftAdapterTests: XCTestCase {
         
         let url: String = SwifTumb.url("user/info")
         let handle: OAuthSwiftRequestHandle? = self.adapter!.client.get(url, success: { (resp: OAuthSwiftResponse) in
+            print(resp.dataString() ?? "")
             XCTAssertNotNil(resp.dataString())
             responseExpectation.fulfill()
         }) { (err: OAuthSwiftError) in
