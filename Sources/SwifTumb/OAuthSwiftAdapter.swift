@@ -10,20 +10,7 @@ import Foundation
 import OAuthSwift
 import SwiftyJSON
 
-public protocol OAuthAdapter {
-    func request(
-        _ urlString: String,
-        method: SwifTumbHttpRequest.Method,
-        parameters: SwifTumb.Parameters,
-        headers: SwifTumb.Headers?,
-        body: Data?,
-        checkTokenExpiration: Bool,
-        success: SwifTumbHttpRequest.SuccessHandler?,
-        failure: SwifTumbHttpRequest.FailureHandler?
-    ) -> SwifTumbRequestHandle?
-}
-
-open class OAuthSwiftAdapter: OAuth1Swift, OAuthAdapter {
+open class OAuthSwiftAdapter: OAuth1Swift, SwifTumbOAuthAdapter {
     
     public init(
         consumerKey: String,
