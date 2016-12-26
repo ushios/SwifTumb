@@ -8,7 +8,6 @@
 
 import Foundation
 import OAuthSwift
-import SwiftyJSON
 
 open class OAuthSwiftAdapter: OAuth1Swift, SwifTumbOAuthAdapter {
     
