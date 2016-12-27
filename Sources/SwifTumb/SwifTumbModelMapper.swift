@@ -10,33 +10,26 @@ import Foundation
 
 enum ModelMappingErrors: Error {
     case errorResponse(Int, String)
+    case errorInvalidFormat(String)
 }
 
-public protocol SwifTumbObjectMapper {
-    static func UserInfo(data: Data) throws -> UserInfoResponse
+public protocol SwifTumbModelMapper {
+    static func Response(data: Data) throws -> SwifTumbResponse
 }
 
-open class SwifTumbDefaultObjectMapper: SwifTumbObjectMapper {
+open class SwifTumbResponseMapper: SwifTumbModelMapper {
     
     open static func Response(data: Data) throws -> SwifTumbResponse {
         let json = try! JSONSerialization.jsonObject(with: data, options: [])
-        let response = json as! SwifTumbResponse
+        let response = SwifTumbResponse(json: json as! [String : Any])
         
-        if response.meta.status != 200 {
+        if response!.meta.status != 200 {
             throw ModelMappingErrors.errorResponse(
-                response.meta.status,
-                response.meta.msg ?? "Error message not found"
+                response!.meta.status,
+                response!.meta.msg ?? "Error message was empty"
             )
         }
         
-        return response
-    }
-    
-    open static func UserInfo(data: Data) throws -> UserInfoResponse {
-        let response = try! SwifTumbDefaultObjectMapper.Response(data: data)
-        
-        let model = response.response as! UserInfoResponse
-        
-        return model
+        return response!
     }
 }

@@ -56,11 +56,17 @@ open class OAuthSwiftAdapter: OAuth1Swift, SwifTumbOAuthAdapter {
             body:body,
             checkTokenExpiration: checkTokenExpiration,
             success: { (response: OAuthSwiftResponse) in
-                let meta: Meta = Meta(status: 200, msg: "hoge")
-                success!(SwifTumbResponse(meta: meta, response: nil))
+                if success != nil {
+                    let resp = try! SwifTumbResponseMapper.Response(
+                        data: response.data
+                    )
+                    success!(resp)
+                }
             },
             failure: { (err: OAuthSwiftError) in
-                failure!(OAuthSwiftAdapterError())
+                if failure != nil {
+                    failure!(OAuthSwiftAdapterError())
+                }
             }
         )
         

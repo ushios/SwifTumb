@@ -10,6 +10,28 @@ import XCTest
 @testable import SwifTumb
 
 class SwifTumbTests: XCTestCase {
+    static let ConsumerKey: String = ""
+    static let ConsumerSecret: String = ""
+    static let OAuthToken: String = ""
+    static let OAuthTokenSecret: String = ""
+    
+    var adapter: OAuthSwiftAdapter?
+    
+    override func setUp() {
+        super.setUp()
+        self.adapter = OAuthSwiftAdapter(
+            consumerKey: SwifTumbTests.ConsumerKey,
+            consumerSecret: SwifTumbTests.ConsumerSecret,
+            oauthToken: SwifTumbTests.OAuthToken,
+            oauthTokenSecret: SwifTumbTests.OAuthTokenSecret
+        )
+    }
+    
+    override func tearDown() {
+        self.adapter = nil
+        super.tearDown()
+    }
+    
     func testBaseUrl() {
         let url: String = SwifTumb.baseUrl()
         XCTAssertEqual(url, "https://api.tumblr.com/v2")
@@ -19,12 +41,28 @@ class SwifTumbTests: XCTestCase {
         let url: String = SwifTumb.url("test.json")
         XCTAssertEqual(url, "https://api.tumblr.com/v2/test.json")
     }
+    
+    func testUserInfo() {
+        let responseExpectation = self.expectation(description: "get followings")
+        
+        let client: SwifTumb = SwifTumb(adapter: self.adapter!)
+        
+        let handle = try! client.userInfo(success: { (response: SwifTumbResponse) in
+            responseExpectation.fulfill()
+        }) { (error) in
+            print(error)
+        }
+        XCTAssertNotNil(handle)
+        
+        self.waitForExpectations(timeout: 5, handler: nil)
+    }
 
 
     static var allTests : [(String, (SwifTumbTests) -> () throws -> Void)] {
         return [
             ("testBaseUrl", testBaseUrl),
             ("testUrl", testUrl),
+            ("testUserInfo", testUserInfo),
         ]
     }
 }

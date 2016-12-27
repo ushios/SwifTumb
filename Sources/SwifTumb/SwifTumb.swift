@@ -31,19 +31,32 @@ open class SwifTumb {
         self.adapter = adapter
     }
     
-//    open func userInfo() throws -> UserInfoResponse {
-//        let url: String = SwifTumb.url("user/info")
-//        self.adapter.request(
-//            url,
-//            method: SwifTumbHttpRequest.Method.GET,
-//            parameters: <#T##SwifTumb.Parameters#>,
-//            headers: <#T##SwifTumb.Headers?#>,
-//            body: <#T##Data?#>,
-//            checkTokenExpiration: <#T##Bool#>,
-//            success: <#T##SwifTumbHttpRequest.SuccessHandler?##SwifTumbHttpRequest.SuccessHandler?##(SwifTumbResponse) -> Void#>,
-//            failure: <#T##SwifTumbHttpRequest.FailureHandler?##SwifTumbHttpRequest.FailureHandler?##(SwifTumbError) -> Void#>
-//        )
-//    }
+    private func request(
+        _ urlString: String,
+        method: SwifTumbHttpRequest.Method,
+        parameters: SwifTumb.Parameters = [:],
+        headers: SwifTumb.Headers? = nil,
+        body: Data? = nil,
+        checkTokenExpiration: Bool = true,
+        success: SwifTumbHttpRequest.SuccessHandler?,
+        failure: SwifTumbHttpRequest.FailureHandler?
+    ) -> SwifTumbRequestHandle? {
+        return self.adapter.request(urlString, method: method, parameters: parameters, headers: headers, body: body, checkTokenExpiration: checkTokenExpiration, success: success, failure: failure)
+    }
+    
+    open func userInfo(
+        success: SwifTumbHttpRequest.SuccessHandler?,
+        failure: SwifTumbHttpRequest.FailureHandler?
+    ) throws -> SwifTumbRequestHandle? {
+        let handle = self.request(
+            SwifTumb.url("user/info"),
+            method: SwifTumbHttpRequest.Method.GET,
+            success: success,
+            failure: failure
+        )
+        
+        return handle
+    }
 }
 
 
