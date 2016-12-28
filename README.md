@@ -8,11 +8,9 @@ Installation
 ### SwiftPM
 
 ```swift
-let package = Package(
-    dependencies: [
-        .Package(url: "git@github.com:ushios/SwifTumb.git", majorVersion: 0)
-    ]
-)
+dependencies: [
+    .Package(url: "git@github.com:ushios/SwifTumb.git", majorVersion: 0)
+]
 ```
 
 Examples
