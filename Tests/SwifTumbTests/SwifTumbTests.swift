@@ -47,6 +47,7 @@ class SwifTumbTests: XCTestCase {
         let client: SwifTumb = SwifTumb(adapter: self.adapter!)
         
         let handle = try! client.userInfo(success: { (response: SwifTumbResponse) in
+            XCTAssertEqual(200, response.meta.status, "user info status")
             XCTAssertNotNil(response.response!.user)
             responseExpectation.fulfill()
         }) { (error) in
@@ -62,6 +63,7 @@ class SwifTumbTests: XCTestCase {
         let client: SwifTumb = SwifTumb(adapter: self.adapter!)
         
         let handle = try! client.userDashboard(success: { (response: SwifTumbResponse) in
+            XCTAssertEqual(200, response.meta.status, "user dashboard status")
             XCTAssertNotNil(response.response!.posts)
             responseExpectation.fulfill()
         }) { (error) in

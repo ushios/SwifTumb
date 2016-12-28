@@ -43,6 +43,22 @@ open class SwifTumb {
         self.adapter = adapter
     }
     
+    convenience init(
+        consumerKey: String,
+        consumerSecret: String,
+        oauthToken: String,
+        oauthTokenSecret: String
+    ) {
+        let adapter = OAuthSwiftAdapter(
+            consumerKey: consumerKey,
+            consumerSecret: consumerSecret,
+            oauthToken: oauthToken,
+            oauthTokenSecret: oauthTokenSecret
+        )
+        
+        self.init(adapter: adapter)
+    }
+    
     private func request(
         _ urlString: String,
         method: SwifTumbHttpRequest.Method,
