@@ -1,2 +1,47 @@
-# SwifTumb
+SwifTumb
+=========
 Tumblr client written by open source swift
+
+Examples
+========
+
+### Using [user/dashboard](https://www.tumblr.com/docs/en/api/v2#m-ug-dashboard) api
+
+```swift
+import SwifTumb
+
+let client = SwifTumb(
+    consumerKey: SwifTumbTests.ConsumerKey,
+    consumerSecret: SwifTumbTests.ConsumerSecret,
+    oauthToken: SwifTumbTests.OAuthToken,
+    oauthTokenSecret: SwifTumbTests.OAuthTokenSecret
+)
+
+let handle = try! client.userDashboard(success: { (response: SwifTumbResponse) in
+    print(response.meta.status) // 200
+    print(response.response!.posts![0].blogName) // Print first blog_name of post list
+}) { (error) in
+    // error code
+}
+
+```
+
+Testing and development
+====================
+
+```bash
+$ swift test
+```
+
+Create xcode project file
+--------------------------
+
+```bash
+$ swift package generate-xcodeproj
+```
+
+Implemented list
+==================
+
+- [user/info](https://www.tumblr.com/docs/en/api/v2#m-up-info)
+- [user/dashboard](https://www.tumblr.com/docs/en/api/v2#m-ug-dashboard)
