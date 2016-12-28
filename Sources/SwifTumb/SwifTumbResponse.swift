@@ -274,42 +274,44 @@ extension SwifTumbResponse.Post {
             let date = json["date"] as? String,
             let format = json["format"] as? String,
             let reblogKey = json["reblog_key"] as? String,
-            let tags = json["tags"] as? [String]?,
-            let bookmarklet = json["bookmarklet"] as? Bool?,
-            let mobile = json["mobile"] as? Bool?,
-            let sourceUrl = json["source_url"] as? String?,
-            let sourceTitle = json["source_title"] as? String?,
-            let liked = json["liked"] as? Bool?,
-            let state = json["state"] as? String,
-            let totalPosts = json["total_posts"] as? Int,
-            let title = json["title"] as? String?,
-            let body = json["body"] as? String?,
-            let photoMaps = json["photos"] as? [[String: Any]]?,
-            let caption = json["caption"] as? String?,
-            let width = json["width"] as? Int?,
-            let height = json["height"] as? Int?,
-//            let text = json["text"] as? String?,
-//            let source = json["source"] as? String?,
-            let url = json["url"] as? String?,
-            let author = json["author"] as? String?,
-            let excerpt = json["excerpt"] as? String?,
-            let publisher = json["publisher"] as? String?,
-//            let description = json["description"] as? String?,
-            let dialogueMaps = json["dialogue"] as? [[String: Any]]?,
-            let plays = json["plays"] as? Int?,
-//            let albumArt = json["album_art"] as? String?,
-            let artist = json["artist"] as? String?,
-//            let album = json["album"] as? String?,
-//            let trackName = json["track_name"] as? String?,
-            let trackNumber = json["track_number"] as? Int?,
-            let year = json["year"] as? Int?,
-            let askingName = json["asking_name"] as? String?,
-            let askingUrl = json["asking_url"] as? String?
-//            let question = json["question"] as? String?,
-//            let answer = json["answer"] as? String?
+            let state = json["state"] as? String
             else {
             return nil
         }
+        let totalPosts = json["total_posts"] as? Int ?? 0
+        
+        let tags = json["tags"] as? [String]
+        let bookmarklet = json["bookmarklet"] as? Bool
+        let mobile = json["mobile"] as? Bool
+        let sourceUrl = json["source_url"] as? String
+        let sourceTitle = json["source_title"] as? String
+        let liked = json["liked"] as? Bool
+        
+        let title = json["title"] as? String
+        let body = json["body"] as? String
+        let photoMaps = json["photos"] as? [[String: Any]]
+        let caption = json["caption"] as? String
+        let width = json["width"] as? Int
+        let height = json["height"] as? Int
+        let text = json["text"] as? String
+        let source = json["source"] as? String
+        let url = json["url"] as? String
+        let author = json["author"] as? String
+        let excerpt = json["excerpt"] as? String
+        let publisher = json["publisher"] as? String
+        let description = json["description"] as? String
+        let dialogueMaps = json["dialogue"] as? [[String: Any]]
+        let plays = json["plays"] as? Int
+        let albumArt = json["album_art"] as? String
+        let artist = json["artist"] as? String
+        let album = json["album"] as? String
+        let trackName = json["track_name"] as? String
+        let trackNumber = json["track_number"] as? Int
+        let year = json["year"] as? Int
+        let askingName = json["asking_name"] as? String
+        let askingUrl = json["asking_url"] as? String
+        let question = json["question"] as? String
+        let answer = json["answer"] as? String
         
         // photo list
         if photoMaps != nil {
@@ -359,24 +361,24 @@ extension SwifTumbResponse.Post {
         self.caption = caption
         self.width = width
         self.height = height
-//        self.text = text
-//        self.source = source
+        self.text = text
+        self.source = source
         self.url = url
         self.author = author
         self.excerpt = excerpt
         self.publisher = publisher
-//        self.description = description
+        self.description = description
         self.plays = plays
-//        self.albumArt = albumArt
+        self.albumArt = albumArt
         self.artist = artist
-//        self.album = album
-//        self.trackName = trackName
+        self.album = album
+        self.trackName = trackName
         self.trackNumber = trackNumber
         self.year = year
         self.askingName = askingName
         self.askingUrl = askingUrl
-//        self.question = question
-//        self.answer = answer
+        self.question = question
+        self.answer = answer
     }
     
     public struct Photo {
@@ -415,16 +417,11 @@ extension SwifTumbResponse.Post.DialogueLine {
 extension SwifTumbResponse.Post.Photo {
     init?(json: [String: Any]) {
         guard let caption = json["caption"] as? String,
-            let originalSizeMap = json["original_size"] as? [String: Any]?,
-            let altSizeMaps = json["alt_size"] as? [[String: Any]]
+            let altSizeMaps = json["alt_sizes"] as? [[String: Any]]
             else {
                 return nil
         }
-        
-        var originalSize: OriginalSize?
-        if originalSizeMap != nil {
-            originalSize = OriginalSize(json: originalSizeMap!)
-        }
+        let originalSizeMap = json["original_size"] as? [String: Any]
         
         var altSizes: [AltSize] = []
         for altSizeMap in altSizeMaps {
@@ -432,8 +429,13 @@ extension SwifTumbResponse.Post.Photo {
             altSizes.append(altSize)
         }
         
+        if originalSizeMap != nil {
+            var originalSize: OriginalSize?
+            originalSize = OriginalSize(json: originalSizeMap!)
+            self.originalSize = originalSize
+        }
+        
         self.caption = caption
-        self.originalSize = originalSize
         self.altSizes = altSizes
     }
     

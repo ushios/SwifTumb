@@ -43,11 +43,26 @@ class SwifTumbTests: XCTestCase {
     }
     
     func testUserInfo() {
-        let responseExpectation = self.expectation(description: "get followings")
-        
+        let responseExpectation = self.expectation(description: "get user info")
         let client: SwifTumb = SwifTumb(adapter: self.adapter!)
         
         let handle = try! client.userInfo(success: { (response: SwifTumbResponse) in
+            XCTAssertNotNil(response.response!.user)
+            responseExpectation.fulfill()
+        }) { (error) in
+            print(error)
+        }
+        XCTAssertNotNil(handle)
+        
+        self.waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    func testUserDashboard() {
+        let responseExpectation = self.expectation(description: "get user dashboard")
+        let client: SwifTumb = SwifTumb(adapter: self.adapter!)
+        
+        let handle = try! client.userDashboard(success: { (response: SwifTumbResponse) in
+            XCTAssertNotNil(response.response!.posts)
             responseExpectation.fulfill()
         }) { (error) in
             print(error)
@@ -63,6 +78,7 @@ class SwifTumbTests: XCTestCase {
             ("testBaseUrl", testBaseUrl),
             ("testUrl", testUrl),
             ("testUserInfo", testUserInfo),
+            ("testUserDashboard", testUserDashboard),
         ]
     }
 }
