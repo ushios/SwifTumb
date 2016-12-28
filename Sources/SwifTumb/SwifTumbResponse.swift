@@ -197,25 +197,25 @@ extension SwifTumbResponse.User {
             let defaultPostFormat = json["default_post_format"] as? String,
             let name = json["name"] as? String,
             let likes = json["likes"] as? Int,
-            let blogs = json["blogs"] as? [[String: Any]]
+            let blogMaps = json["blogs"] as? [[String: Any]]
             else {
                 return nil
         }
         
-        var blogObjects: [SwifTumbResponse.User.Blog] = []
-        for blog in blogs {
-            guard let b = SwifTumbResponse.User.Blog(json: blog) else {
+        var blogs: [SwifTumbResponse.User.Blog] = []
+        for blogMap in blogMaps {
+            guard let blog = SwifTumbResponse.User.Blog(json: blogMap) else {
                 return nil
             }
             
-            blogObjects.append(b)
+            blogs.append(blog)
         }
         
         self.following = following
         self.defaultPostFormat = defaultPostFormat
         self.name = name
         self.likes = likes
-        self.blogs = blogObjects
+        self.blogs = blogs
     }
 }
 
@@ -246,15 +246,123 @@ extension SwifTumbResponse.User.Blog {
 
 extension SwifTumbResponse.Post {
     
+    init?(json: [String: Any]) {
+        guard let blogName = json["blog_name"] as? String,
+            let id = json["id"] as? Int,
+            let postUrl = json["url"] as? String,
+            let typeString = json["type"] as? String,
+            let timestamp = json["timestamp"] as? Int,
+            let date = json["date"] as? String,
+            let format = json["format"] as? String,
+            let reblogKey = json["reblog_key"] as? String,
+            let tags = json["tags"] as? [String],
+            let bookmarklet = json["bookmarklet"] as? Bool,
+            let mobile = json["mobile"] as? Bool,
+            let sourceUrl = json["source_url"] as? String,
+            let sourceTitle = json["source_title"] as? String,
+            let liked = json["liked"] as? Bool,
+            let state = json["state"] as? String,
+            let totalPosts = json["total_posts"] as? Int,
+            let title = json["title"] as? String,
+            let body = json["body"] as? String,
+            let photoMaps = json["photos"] as? [[String: Any]],
+            let caption = json["caption"] as? String,
+            let width = json["width"] as? Int,
+            let height = json["height"] as? Int,
+            let text = json["text"] as? String,
+            let source = json["source"] as? String,
+            let url = json["url"] as? String,
+            let author = json["author"] as? String,
+            let excerpt = json["excerpt"] as? String,
+            let publisher = json["publisher"] as? String,
+            let description = json["description"] as? String,
+            let dialogueMaps = json["dialogue"] as? [[String: Any]],
+            let plays = json["plays"] as? Int,
+            let albumArt = json["album_art"] as? String,
+            let artist = json["artist"] as? String,
+            let album = json["album"] as? String,
+            let trackName = json["track_name"] as? String,
+            let trackNumber = json["track_number"] as? Int,
+            let year = json["year"] as? Int,
+            let askingName = json["asking_name"] as? String,
+            let askingUrl = json["asking_url"] as? String,
+            let question = json["question"] as? String,
+            let answer = json["answer"] as? String
+            else {
+            return nil
+        }
+        
+        // photo list
+        var photos: [Photo] = []
+        for photoMap in photoMaps {
+            let photo: Photo = Photo(json: photoMap)!
+            photos.append(photo)
+        }
+        
+        // chat dialogue
+        var dialogue: [DialogueLine] = []
+        for dialogueLineMap in dialogueMaps {
+            let dialogueLine: DialogueLine = DialogueLine(json: dialogueLineMap)!
+            dialogue.append(dialogueLine)
+        }
+        
+        // player object
+        let player: Player = Player(any: json["player"])!
+        
+     
+        self.blogName = blogName
+        self.id = id
+        self.postUrl = postUrl
+        self.type = PostType(rawValue: typeString)!
+        self.timestamp = timestamp
+        self.date = date
+        self.format = format
+        self.reblogKey = reblogKey
+        self.tags = tags
+        self.bookmarklet = bookmarklet
+        self.mobile = mobile
+        self.sourceUrl = sourceUrl
+        self.sourceTitle = sourceTitle
+        self.liked = liked
+        self.state = state
+        self.totalPosts = totalPosts
+        self.title = title
+        self.body = body
+        self.photos = photos
+        self.caption = caption
+        self.width = width
+        self.height = height
+        self.text = text
+        self.source = source
+        self.url = url
+        self.author = author
+        self.excerpt = excerpt
+        self.publisher = publisher
+        self.description = description
+        self.dialogue = dialogue
+        self.player = player
+        self.plays = plays
+        self.albumArt = albumArt
+        self.artist = artist
+        self.album = album
+        self.trackName = trackName
+        self.trackNumber = trackNumber
+        self.year = year
+        self.askingName = askingName
+        self.askingUrl = askingUrl
+        self.question = question
+        self.answer = answer
+    }
+    
     public enum PostType: String {
-        case Text
-        case Quote
-        case Link
-        case Answer
-        case Video
-        case Audio
-        case Photo
-        case Chat
+        case Text = "text"
+        case Quote = "quote"
+        case Link = "link"
+        case Answer = "answer"
+        case Video = "video"
+        case Audio = "audio"
+        case Photo = "photo"
+        case Chat = "chat"
     }
     
     public struct Photo {
@@ -270,12 +378,51 @@ extension SwifTumbResponse.Post {
     }
     
     public struct Player {
-        var width: Int
+        var width: Int?
         var embedCode: String
     }
 }
 
+extension SwifTumbResponse.Post.DialogueLine {
+    init?(json: [String: Any]) {
+        guard let name = json["name"] as? String,
+            let label = json["label"] as? String,
+            let phrase = json["phrase"] as? String
+            else {
+                return nil
+        }
+        
+        self.name = name
+        self.label = label
+        self.phrase = phrase
+    }
+}
+
 extension SwifTumbResponse.Post.Photo {
+    init?(json: [String: Any]) {
+        guard let caption = json["caption"] as? String,
+            let originalSizeMap = json["original_size"] as? [String: Any]?,
+            let altSizeMaps = json["alt_size"] as? [[String: Any]]
+            else {
+                return nil
+        }
+        
+        var originalSize: OriginalSize?
+        if originalSizeMap != nil {
+            originalSize = OriginalSize(json: originalSizeMap!)
+        }
+        
+        var altSizes: [AltSize] = []
+        for altSizeMap in altSizeMaps {
+            let altSize: AltSize = AltSize(json: altSizeMap)!
+            altSizes.append(altSize)
+        }
+        
+        self.caption = caption
+        self.originalSize = originalSize
+        self.altSizes = altSizes
+    }
+    
     public struct AltSize {
         var width: Int
         var height: Int
@@ -286,5 +433,73 @@ extension SwifTumbResponse.Post.Photo {
         var width: Int
         var height: Int
         var url: String
+    }
+}
+
+extension SwifTumbResponse.Post.Photo.OriginalSize {
+    init?(json: [String: Any]) {
+        guard let width = json["width"] as? Int,
+            let height = json["height"] as? Int,
+            let url = json["url"] as? String
+            else {
+                return nil
+        }
+        
+        self.width = width
+        self.height = height
+        self.url = url
+    }
+}
+
+extension SwifTumbResponse.Post.Photo.AltSize {
+    init?(json: [String: Any]) {
+        guard let width = json["width"] as? Int,
+            let height = json["height"] as? Int,
+            let url = json["url"] as? String
+            else {
+                return nil
+        }
+        
+        self.width = width
+        self.height = height
+        self.url = url
+    }
+}
+
+extension SwifTumbResponse.Post.Player {
+    init?(any: Any?) {
+        
+        if any == nil {
+            return nil
+        } else if any is String {
+            guard let embedCode = any as? String
+                else {
+                    return nil
+            }
+            self.init(embedCode: embedCode)
+        } else if any is [String: Any] {
+            guard let json = any as? [String: Any]
+                else {
+                    return nil
+            }
+            self.init(json: json)
+        } else {
+            return nil
+        }
+    }
+    
+    init?(json: [String: Any]) {
+        guard let width = json["width"] as? Int?,
+            let embedCode = json["embedCode"] as? String
+            else {
+                return nil
+        }
+        
+        self.width = width
+        self.embedCode = embedCode
+    }
+    
+    init?(embedCode: String) {
+        self.embedCode = embedCode
     }
 }
