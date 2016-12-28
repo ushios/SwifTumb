@@ -37,6 +37,7 @@ extension SwifTumbResponse {
         var user: User?
         var blog: Blog?
         var posts: [Post]?
+        var totalPosts: Int?
     }
     
     public struct User {
@@ -75,7 +76,6 @@ extension SwifTumbResponse {
         var sourceTitle: String?
         var liked: Bool
         var state: String
-        var totalPosts: Int
         
         // text posts
         var title: String?
@@ -137,6 +137,7 @@ extension SwifTumbResponse.Response {
                 return nil
         }
         
+        let totalPosts = json["total_posts"] as? Int
         
         if postMaps != nil {
             var posts: [SwifTumbResponse.Post] = []
@@ -154,6 +155,8 @@ extension SwifTumbResponse.Response {
         if blog != nil {
             self.blog = SwifTumbResponse.Blog(json: blog!)
         }
+        
+        self.totalPosts = totalPosts
     }
 }
 
@@ -278,7 +281,6 @@ extension SwifTumbResponse.Post {
             else {
             return nil
         }
-        let totalPosts = json["total_posts"] as? Int ?? 0
         
         let tags = json["tags"] as? [String]
         let bookmarklet = json["bookmarklet"] as? Bool
@@ -355,7 +357,6 @@ extension SwifTumbResponse.Post {
         self.sourceTitle = sourceTitle
         self.liked = liked ?? false
         self.state = state
-        self.totalPosts = totalPosts
         self.title = title
         self.body = body
         self.caption = caption
