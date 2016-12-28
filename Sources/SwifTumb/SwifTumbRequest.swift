@@ -21,18 +21,12 @@ open class SwifTumbHttpRequest {
     public typealias SuccessHandler = (_ response: SwifTumbResponse) -> Void
     public typealias FailureHandler = (_ error: SwifTumbError) -> Void
     
-    public enum Method : String {
-        
+    public enum Method: String {
         case GET
-        
         case POST
-        
         case PUT
-        
         case DELETE
-        
         case PATCH
-        
         case HEAD
     }
 }
