@@ -11,10 +11,10 @@ Examples
 import SwifTumb
 
 let client = SwifTumb(
-    consumerKey: SwifTumbTests.ConsumerKey,
-    consumerSecret: SwifTumbTests.ConsumerSecret,
-    oauthToken: SwifTumbTests.OAuthToken,
-    oauthTokenSecret: SwifTumbTests.OAuthTokenSecret
+    consumerKey: "",
+    consumerSecret: "",
+    oauthToken: "",
+    oauthTokenSecret: ""
 )
 
 let handle = try! client.userDashboard(success: { (response: SwifTumbResponse) in
