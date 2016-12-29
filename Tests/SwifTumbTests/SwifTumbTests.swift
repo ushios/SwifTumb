@@ -111,7 +111,6 @@ class SwifTumbTests: XCTestCase {
             success: { (response: SwifTumbResponse) in
                 var post: SwifTumbResponse.Post
                 post = (response.response?.posts?[0])!
-                
                 XCTAssertEqual(200, response.meta.status, "blog posts")
                 let params = SwifTumb.PostReblogParameters(
                     self.blogIdentifier(),
