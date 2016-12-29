@@ -10,25 +10,15 @@ import XCTest
 @testable import SwifTumb
 
 class SwifTumbTests: XCTestCase {
-    static let ConsumerKey: String = ""
-    static let ConsumerSecret: String = ""
-    static let OAuthToken: String = ""
-    static let OAuthTokenSecret: String = ""
-    
-    var adapter: OAuthSwiftAdapter?
+    var client: SwifTumb?
     
     override func setUp() {
         super.setUp()
-        self.adapter = OAuthSwiftAdapter(
-            consumerKey: SwifTumbTests.ConsumerKey,
-            consumerSecret: SwifTumbTests.ConsumerSecret,
-            oauthToken: SwifTumbTests.OAuthToken,
-            oauthTokenSecret: SwifTumbTests.OAuthTokenSecret
-        )
+        self.client = SwifTumb()
     }
     
     override func tearDown() {
-        self.adapter = nil
+        self.client = nil
         super.tearDown()
     }
     
@@ -44,9 +34,7 @@ class SwifTumbTests: XCTestCase {
     
     func testUserInfo() {
         let responseExpectation = self.expectation(description: "get user info")
-        let client: SwifTumb = SwifTumb(adapter: self.adapter!)
-        
-        let handle = try! client.userInfo(success: { (response: SwifTumbResponse) in
+        let handle = try! self.client!.userInfo(success: { (response: SwifTumbResponse) in
             XCTAssertEqual(200, response.meta.status, "user info status")
             XCTAssertNotNil(response.response!.user)
             responseExpectation.fulfill()
@@ -60,9 +48,7 @@ class SwifTumbTests: XCTestCase {
     
     func testUserDashboard() {
         let responseExpectation = self.expectation(description: "get user dashboard")
-        let client: SwifTumb = SwifTumb(adapter: self.adapter!)
-        
-        let handle = try! client.userDashboard(success: { (response: SwifTumbResponse) in
+        let handle = try! self.client!.userDashboard(success: { (response: SwifTumbResponse) in
             XCTAssertEqual(200, response.meta.status, "user dashboard status")
             XCTAssertNotNil(response.response!.posts)
             responseExpectation.fulfill()

@@ -10,6 +10,10 @@ import Foundation
 import SwiftyJSON
 
 open class SwifTumb {
+    static let EnvConsumerKey: String = "SWIFTUMB_CONSUMER_KEY"
+    static let EnvConsumerSecret: String = "SWIFTUMB_CONSUMER_SECRET"
+    static let EnvOAuthToken: String = "SWIFTUMB_OAUTH_TOKEN"
+    static let EnvOAuthTokenSecret: String = "SWIFTUMB_OAUTH_TOKEN_SECRET"
     
     public enum PostType: String {
         case Text = "text"
@@ -39,11 +43,11 @@ open class SwifTumb {
         return "\(SwifTumb.baseUrl())/\(path)"
     }
     
-    init(adapter: SwifTumbOAuthAdapter) {
+    public init(adapter: SwifTumbOAuthAdapter) {
         self.adapter = adapter
     }
     
-    convenience init(
+    public convenience init(
         consumerKey: String,
         consumerSecret: String,
         oauthToken: String,
@@ -57,6 +61,23 @@ open class SwifTumb {
         )
         
         self.init(adapter: adapter)
+    }
+    
+    public convenience init?() {
+        guard let consumerKey = getenv(SwifTumb.EnvConsumerKey),
+            let consumerSecret = getenv(SwifTumb.EnvConsumerSecret),
+            let oauthToken = getenv(SwifTumb.EnvOAuthToken),
+            let oauthTokenSecret = getenv(SwifTumb.EnvOAuthTokenSecret)
+            else {
+                return nil
+        }
+        
+        self.init(
+            consumerKey: String(utf8String: consumerKey) ?? "",
+            consumerSecret: String(utf8String: consumerSecret) ?? "",
+            oauthToken: String(utf8String: oauthToken) ?? "",
+            oauthTokenSecret: String(utf8String: oauthTokenSecret) ?? ""
+        )
     }
     
     private func request(
