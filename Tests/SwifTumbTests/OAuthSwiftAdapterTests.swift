@@ -15,11 +15,20 @@ class OAuthSwiftAdapterTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
+        
+        guard let consumerKey = getenv(SwifTumb.EnvConsumerKey),
+            let consumerSecret = getenv(SwifTumb.EnvConsumerSecret),
+            let oauthToken = getenv(SwifTumb.EnvOAuthToken),
+            let oauthTokenSecret = getenv(SwifTumb.EnvOAuthTokenSecret)
+            else {
+                return
+        }
+        
         self.adapter = OAuthSwiftAdapter(
-            consumerKey: SwifTumbTests.ConsumerKey,
-            consumerSecret: SwifTumbTests.ConsumerSecret,
-            oauthToken: SwifTumbTests.OAuthToken,
-            oauthTokenSecret: SwifTumbTests.OAuthTokenSecret
+            consumerKey: String(utf8String: consumerKey) ?? "",
+            consumerSecret: String(utf8String: consumerSecret) ?? "",
+            oauthToken: String(utf8String: oauthToken) ?? "",
+            oauthTokenSecret: String(utf8String: oauthTokenSecret) ?? ""
         )
     }
     

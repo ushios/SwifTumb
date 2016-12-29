@@ -1,6 +1,19 @@
 SwifTumb
 =========
+[![Build Status](https://travis-ci.org/ushios/SwifTumb.svg?branch=master)](https://travis-ci.org/ushios/SwifTumb)
+
 Tumblr client written by open source swift
+
+Installation
+============
+
+### SwiftPM
+
+```swift
+dependencies: [
+    .Package(url: "https://github.com/ushios/SwifTumb.git", majorVersion: 0)
+]
+```
 
 Examples
 ========
@@ -30,15 +43,15 @@ Testing and development
 ====================
 
 ```bash
+$ export SWIFTUMB_CONSUMER_KEY=""
+$ export SWIFTUMB_CONSUMER_SECRET=""
+$ export SWIFTUMB_OAUTH_TOKEN=""
+$ export SWIFTUMB_OAUTH_TOKEN_SECRET=""
 $ swift test
 ```
 
-Create xcode project file
---------------------------
+or create xcode project file using `swift package generate-xcodeproj` command and set environments on xcode.
 
-```bash
-$ swift package generate-xcodeproj
-```
 
 Implemented list
 ==================

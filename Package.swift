@@ -3,6 +3,6 @@ import PackageDescription
 let package = Package(
     name: "SwifTumb",
     dependencies: [
-        .Package(url: "git@github.com:OAuthSwift/OAuthSwift", majorVersion: 1)
+        .Package(url: "https://github.com/OAuthSwift/OAuthSwift.git", majorVersion: 1)
     ]
 )

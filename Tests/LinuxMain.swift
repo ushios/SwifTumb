@@ -3,4 +3,5 @@ import XCTest
 
 XCTMain([
      testCase(SwifTumbTests.allTests),
+     testCase(OAuthSwiftAdapterTests.allTests),
 ])
