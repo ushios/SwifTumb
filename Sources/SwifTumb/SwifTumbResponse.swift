@@ -169,8 +169,6 @@ extension SwifTumbResponse.Response {
             self.blog = SwifTumbResponse.Blog(json: blog!)
         }
         
-        
-        
         self.totalPosts = totalPosts
     }
 }

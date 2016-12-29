@@ -275,6 +275,32 @@ open class SwifTumb {
         
         return handle
     }
+    
+    
+    /// Request parameters for post/reblog
+    public struct PostReblogParameters: SwifTumbParameterHolder {
+        var blogIdentifier: String
+        var id: Int?
+        var reblogKey: String?
+        var comment: String?
+        var nativeInlineImages: Bool?
+    }
+    
+    open func postReblog(
+        params: PostReblogParameters,
+        success: SwifTumbHttpRequest.SuccessHandler?,
+        failure: SwifTumbHttpRequest.FailureHandler?
+        ) throws -> SwifTumbRequestHandle? {
+        let handle = self.request(
+            SwifTumb.url("blog/\(params.blogIdentifier)/post/reblog"),
+            method: SwifTumbHttpRequest.Method.POST,
+            paramHolder: params,
+            success: success,
+            failure: failure
+        )
+        
+        return handle
+    }
 }
 
 extension SwifTumb {
@@ -354,6 +380,41 @@ extension SwifTumb.PostsParameters {
     }
 }
 
+extension SwifTumb.PostReblogParameters {
+    public init(
+        _ blogIdentifier: String,
+        id: Int? = nil,
+        reblogKey: String? = nil,
+        comment: String? = nil,
+        nativeInlineImages: Bool? = nil
+    ) {
+        self.blogIdentifier = blogIdentifier
+        self.id = id ?? nil
+        self.reblogKey = reblogKey ?? nil
+        self.comment = comment
+        self.nativeInlineImages = nativeInlineImages
+    }
+    
+    
+    
+    public func parameters() -> [String: Any] {
+        var param: [String: Any] = [:]
+        
+        param["id"] = self.id
+        param["reblog_key"] = self.reblogKey
+        
+        if self.comment != nil {
+            param["comment"] = self.comment
+        }
+        
+        if self.nativeInlineImages != nil {
+            param["native_inline_images"] = self.nativeInlineImages
+        }
+        
+        return param
+    }
+}
+
 extension SwifTumb.UserLikesParameters {
     public func parameters() -> [String: Any] {
         var param: [String: Any] = [:]
@@ -376,6 +437,7 @@ extension SwifTumb.UserLikesParameters {
         
         return param
     }
+    
 }
 
 /// Parameters protocol

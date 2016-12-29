@@ -28,9 +28,12 @@ open class SwifTumbResponseMapper: SwifTumbModelMapper {
     
     open static func Response(data: Data) throws -> SwifTumbResponse {
         let json = try! JSONSerialization.jsonObject(with: data, options: [])
-        let response = SwifTumbResponse(json: json as! [String : Any])
+        let jsonMap = json as? [String : Any]
         
-        if response!.meta.status != 200 {
+        let response = SwifTumbResponse(json: jsonMap!)
+        
+        let passList: [Int] = [200, 201]
+        if passList.index(of: response!.meta.status) == nil {
             throw ModelMappingErrors.errorResponse(
                 response!.meta.status,
                 response!.meta.msg ?? "Error message was empty"

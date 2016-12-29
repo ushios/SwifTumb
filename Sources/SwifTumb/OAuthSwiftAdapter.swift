@@ -58,6 +58,7 @@ open class OAuthSwiftAdapter: OAuth1Swift, SwifTumbOAuthAdapter {
             success: { (response: OAuthSwiftResponse) in
                 if success != nil {
 //                    print("response data:", String(data: response.data, encoding: .utf8))
+                    
                     let resp = try! SwifTumbResponseMapper.Response(
                         data: response.data
                     )
@@ -66,7 +67,7 @@ open class OAuthSwiftAdapter: OAuth1Swift, SwifTumbOAuthAdapter {
             },
             failure: { (err: OAuthSwiftError) in
                 if failure != nil {
-                    failure!(OAuthSwiftAdapterError())
+                    failure!(OAuthSwiftAdapterError(err.description))
                 }
             }
         )
@@ -93,7 +94,15 @@ open class OAuthSwiftAdapter: OAuth1Swift, SwifTumbOAuthAdapter {
 }
 
 open class OAuthSwiftAdapterError: SwifTumbError {
+    private var rawMessage: String
     
+    init(_ message: String) {
+        self.rawMessage = message
+    }
+    
+    open func message() -> String {
+        return self.rawMessage
+    }
 }
 
 open class OAuthSwiftAdapterRequestHandle: SwifTumbRequestHandle {
