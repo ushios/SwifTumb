@@ -188,9 +188,41 @@ open class SwifTumb {
         params: UserDashboardParameters? = nil,
         success: SwifTumbHttpRequest.SuccessHandler?,
         failure: SwifTumbHttpRequest.FailureHandler?
-        ) throws -> SwifTumbRequestHandle? {
+    ) throws -> SwifTumbRequestHandle? {
         let handle = self.request(
             SwifTumb.url("user/dashboard"),
+            method: SwifTumbHttpRequest.Method.GET,
+            paramHolder: params,
+            success: success,
+            failure: failure
+        )
+        
+        return handle
+    }
+    
+    /// Request parameters for user/likes
+    public struct UserLikesParameters: SwifTumbParameterHolder {
+        var limit: Int?
+        var offset: Int?
+        var before: Int?
+        var after: Int?
+    }
+    
+    /// Request user/likes api
+    ///
+    /// - Parameters:
+    ///   - params: user/likes parameter
+    ///   - success: success handler
+    ///   - failure: failure handler
+    /// - Returns: request handle
+    /// - Throws: request exceptions
+    open func userLikes(
+        params: UserLikesParameters? = nil,
+        success: SwifTumbHttpRequest.SuccessHandler?,
+        failure: SwifTumbHttpRequest.FailureHandler?
+        ) throws -> SwifTumbRequestHandle? {
+        let handle = self.request(
+            SwifTumb.url("user/likes"),
             method: SwifTumbHttpRequest.Method.GET,
             paramHolder: params,
             success: success,
@@ -232,6 +264,30 @@ extension SwifTumb.UserDashboardParameters {
         
         if self.notesInfo != nil {
             param["notes_info"] = self.notesInfo!
+        }
+        
+        return param
+    }
+}
+
+extension SwifTumb.UserLikesParameters {
+    public func parameters() -> [String: Any] {
+        var param: [String: Any] = [:]
+        
+        if self.limit != nil {
+            param["limit"] = self.limit!
+        }
+        
+        if self.offset != nil {
+            param["offset"] = self.offset
+        }
+        
+        if self.after != nil {
+            param["after"] = self.after
+        }
+        
+        if self.before != nil {
+            param["before"] = self.before
         }
         
         return param
