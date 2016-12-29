@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SwiftyJSON
 
 open class SwifTumb {
     static let EnvConsumerKey: String = "SWIFTUMB_CONSUMER_KEY"

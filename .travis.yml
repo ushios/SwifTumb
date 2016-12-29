@@ -1,7 +1,6 @@
 language: objective-c
 osx_image: xcode8
 before_install:
-  - swift --version
+  - swift package generate-xcodeproj
 script:
-  - swift --version
-  
+  - swift test
