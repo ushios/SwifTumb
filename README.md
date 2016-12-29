@@ -9,7 +9,7 @@ Installation
 
 ```swift
 dependencies: [
-    .Package(url: "git@github.com:ushios/SwifTumb.git", majorVersion: 0)
+    .Package(url: "https://github.com/ushios/SwifTumb.git", majorVersion: 0)
 ]
 ```
 
