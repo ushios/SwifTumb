@@ -13,7 +13,14 @@ enum ModelMappingErrors: Error {
     case errorInvalidFormat(String)
 }
 
+/// Request parameter protocol
 public protocol SwifTumbModelMapper {
+    
+    /// Response to object
+    ///
+    /// - Parameter data: data from request
+    /// - Returns: SwifTumb response object
+    /// - Throws: mapping exceptions
     static func Response(data: Data) throws -> SwifTumbResponse
 }
 
