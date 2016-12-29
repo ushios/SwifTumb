@@ -59,7 +59,7 @@ extension SwifTumbResponse {
         var description: String
         var ask: Bool
         var askAnon: Bool
-        var likes: Int
+        var likes: Int?
     }
     
     public struct Post {
@@ -198,11 +198,12 @@ extension SwifTumbResponse.Blog {
             let updated = json["updated"] as? Int,
             let description = json["description"] as? String,
             let ask = json["ask"] as? Bool,
-            let askAnon = json["ask_anon"] as? Bool,
-            let likes = json["likes"] as? Int
+            let askAnon = json["ask_anon"] as? Bool
             else {
                 return nil
         }
+        
+        let likes = json["likes"] as? Int
         
         self.title = title
         self.posts = posts
