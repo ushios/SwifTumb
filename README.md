@@ -60,3 +60,4 @@ Implemented list
 - [user/dashboard](https://www.tumblr.com/docs/en/api/v2#m-ug-dashboard)
 - [user/likes](https://www.tumblr.com/docs/en/api/v2#m-ug-likes)
 - [blog/xxx/posts](https://www.tumblr.com/docs/en/api/v2#posts)
+- [blog/xxx/post/reblog](https://www.tumblr.com/docs/en/api/v2#reblogging)
