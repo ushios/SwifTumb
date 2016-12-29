@@ -59,6 +59,21 @@ class SwifTumbTests: XCTestCase {
         
         self.waitForExpectations(timeout: 5, handler: nil)
     }
+    
+    func testUserLikes() {
+        let responseExpectation = self.expectation(description: "get user likes")
+        let handle = try! self.client!.userLikes(success: { (response: SwifTumbResponse) in
+            XCTAssertEqual(200, response.meta.status, "user likes status")
+            XCTAssertNotNil(response.response!.likedPosts)
+            XCTAssertNotNil(response.response!.likedCount)
+            responseExpectation.fulfill()
+        }) { (error) in
+            print(error)
+        }
+        XCTAssertNotNil(handle)
+        
+        self.waitForExpectations(timeout: 5, handler: nil)
+    }
 
 
     static var allTests : [(String, (SwifTumbTests) -> () throws -> Void)] {
@@ -67,6 +82,7 @@ class SwifTumbTests: XCTestCase {
             ("testUrl", testUrl),
             ("testUserInfo", testUserInfo),
             ("testUserDashboard", testUserDashboard),
+            ("testUserLikes", testUserLikes),
         ]
     }
 }

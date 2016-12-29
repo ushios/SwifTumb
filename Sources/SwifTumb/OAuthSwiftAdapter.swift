@@ -57,6 +57,7 @@ open class OAuthSwiftAdapter: OAuth1Swift, SwifTumbOAuthAdapter {
             checkTokenExpiration: checkTokenExpiration,
             success: { (response: OAuthSwiftResponse) in
                 if success != nil {
+//                    print("response data:", String(data: response.data, encoding: .utf8))
                     let resp = try! SwifTumbResponseMapper.Response(
                         data: response.data
                     )

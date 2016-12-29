@@ -38,6 +38,8 @@ extension SwifTumbResponse {
         var blog: Blog?
         var posts: [Post]?
         var totalPosts: Int?
+        var likedPosts: [Post]?
+        var likedCount: Int?
     }
     
     public struct User {
@@ -130,14 +132,12 @@ extension SwifTumbResponse {
 
 extension SwifTumbResponse.Response {
     init?(json: [String: Any]) {
-        guard let user = json["user"] as? [String: Any]?,
-            let postMaps = json["posts"] as? [[String: Any]]?,
-            let blog = json["blog"] as? [String: Any]?
-            else {
-                return nil
-        }
-        
+        let user = json["user"] as? [String: Any]
+        let postMaps = json["posts"] as? [[String: Any]]
+        let blog = json["blog"] as? [String: Any]
         let totalPosts = json["total_posts"] as? Int
+        let likedPosts = json["liked_posts"] as? [[String: Any]]
+        let likedCount = json["liked_count"] as? Int
         
         if postMaps != nil {
             var posts: [SwifTumbResponse.Post] = []
@@ -148,6 +148,19 @@ extension SwifTumbResponse.Response {
             self.posts = posts
         }
         
+        if likedPosts != nil {
+            var posts: [SwifTumbResponse.Post] = []
+            for postMap in likedPosts! {
+                let post: SwifTumbResponse.Post? = SwifTumbResponse.Post(json: postMap)
+                posts.append(post!)
+            }
+            self.likedPosts = posts
+        }
+        
+        if likedCount != nil {
+            self.likedCount = likedCount!
+        }
+        
         if user != nil {
             self.user = SwifTumbResponse.User(json: user!)
         }
@@ -155,6 +168,8 @@ extension SwifTumbResponse.Response {
         if blog != nil {
             self.blog = SwifTumbResponse.Blog(json: blog!)
         }
+        
+        
         
         self.totalPosts = totalPosts
     }
