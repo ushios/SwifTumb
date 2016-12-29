@@ -59,3 +59,4 @@ Implemented list
 - [user/info](https://www.tumblr.com/docs/en/api/v2#m-up-info)
 - [user/dashboard](https://www.tumblr.com/docs/en/api/v2#m-ug-dashboard)
 - [user/likes](https://www.tumblr.com/docs/en/api/v2#m-ug-likes)
+- [blog/xxx/posts](https://www.tumblr.com/docs/en/api/v2#posts)

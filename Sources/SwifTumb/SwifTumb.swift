@@ -231,6 +231,50 @@ open class SwifTumb {
         
         return handle
     }
+    
+    /// Request parameters for posts
+    public struct PostsParameters: SwifTumbParameterHolder {
+        var blogIdentifier: String
+        var type: PostType?
+        var id: Int?
+        var tag: String?
+        var limit: Int?
+        var offset: Int?
+        var reblogInfo: Bool?
+        var notesInfo: Bool?
+        var filter: String?
+    }
+    
+    /// Request /blog/xxxx/posts api
+    ///
+    /// - Parameters:
+    ///   - params: posts parameters
+    ///   - success: success handler
+    ///   - failure: failure handler
+    /// - Returns: request handle
+    /// - Throws: request exceptions
+    open func posts(
+        params: PostsParameters,
+        success: SwifTumbHttpRequest.SuccessHandler?,
+        failure: SwifTumbHttpRequest.FailureHandler?
+        ) throws -> SwifTumbRequestHandle? {
+        var url: String
+        if params.type != nil {
+            url = SwifTumb.url("blog/\(params.blogIdentifier)/posts/\(params.type!.rawValue)")
+        } else {
+            url = SwifTumb.url("blog/\(params.blogIdentifier)/posts")
+        }
+        
+        let handle = self.request(
+            url,
+            method: SwifTumbHttpRequest.Method.GET,
+            paramHolder: params,
+            success: success,
+            failure: failure
+        )
+        
+        return handle
+    }
 }
 
 extension SwifTumb {
@@ -264,6 +308,46 @@ extension SwifTumb.UserDashboardParameters {
         
         if self.notesInfo != nil {
             param["notes_info"] = self.notesInfo!
+        }
+        
+        return param
+    }
+}
+
+extension SwifTumb.PostsParameters {
+    public init(_ blogIdentifier: String) {
+        self.blogIdentifier = blogIdentifier
+    }
+    
+    public func parameters() -> [String : Any] {
+        var param: [String: Any] = [:]
+        
+        if self.id != nil {
+            param["id"] = self.id!
+        }
+        
+        if self.tag != nil {
+            param["tag"] = self.tag!
+        }
+        
+        if self.limit != nil {
+            param["limit"] = self.limit!
+        }
+        
+        if self.offset != nil {
+            param["offset"] = self.offset!
+        }
+        
+        if self.reblogInfo != nil {
+            param["reblog_info"] = self.reblogInfo!
+        }
+        
+        if self.notesInfo != nil {
+            param["notes_info"] = self.notesInfo!
+        }
+        
+        if self.filter != nil {
+            param["filter"] = self.filter!
         }
         
         return param

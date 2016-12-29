@@ -74,6 +74,25 @@ class SwifTumbTests: XCTestCase {
         
         self.waitForExpectations(timeout: 5, handler: nil)
     }
+    
+    func testPosts() {
+        let responseExpectation = self.expectation(description: "get posts")
+        let params = SwifTumb.PostsParameters("ushio.tumblr.com")
+        let handle = try! self.client!.posts(
+            params: params,
+            success: { (response: SwifTumbResponse) in
+                XCTAssertEqual(200, response.meta.status, "user posts")
+                XCTAssertNotNil(response.response!.posts)
+                XCTAssertNotNil(response.response!.blog)
+                XCTAssertNotNil(response.response!.totalPosts)
+            responseExpectation.fulfill()
+        }) { (error) in
+            print(error)
+        }
+        XCTAssertNotNil(handle)
+        
+        self.waitForExpectations(timeout: 5, handler: nil)
+    }
 
 
     static var allTests : [(String, (SwifTumbTests) -> () throws -> Void)] {
