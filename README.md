@@ -1,5 +1,7 @@
 SwifTumb
 =========
+[![Build Status](https://travis-ci.org/ushios/SwifTumb.svg?branch=master)](https://travis-ci.org/ushios/SwifTumb)
+
 Tumblr client written by open source swift
 
 Installation
