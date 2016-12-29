@@ -109,7 +109,7 @@ extension SwifTumbResponse {
         
         // audio posts
         // --> caption
-        var player: Player?
+        var player: [Player]?
         var plays: Int?
         var albumArt: String?
         var artist: String?
@@ -353,8 +353,20 @@ extension SwifTumbResponse.Post {
         
         // player object
         if json["player"] != nil {
-            let player: Player = Player(any: json["player"])!
-            self.player = player
+            var players: [Player] = []
+            if json["player"] is String {
+                let embedCode = json["player"] as? String
+                let player: Player = Player(embedCode: embedCode!)!
+                players.append(player)
+            } else if json["player"] is [[String: Any]] {
+                let playerMaps = json["player"] as? [[String: Any]]
+                for playerMap in playerMaps! {
+                    let player: Player = Player(json: playerMap)!
+                    players.append(player)
+                }
+            }
+            
+            self.player = players
         }
         
      
@@ -500,33 +512,13 @@ extension SwifTumbResponse.Post.Photo.AltSize {
 }
 
 extension SwifTumbResponse.Post.Player {
-    init?(any: Any?) {
-        
-        if any == nil {
-            return nil
-        } else if any is String {
-            guard let embedCode = any as? String
-                else {
-                    return nil
-            }
-            self.init(embedCode: embedCode)
-        } else if any is [String: Any] {
-            guard let json = any as? [String: Any]
-                else {
-                    return nil
-            }
-            self.init(json: json)
-        } else {
-            return nil
-        }
-    }
-    
     init?(json: [String: Any]) {
-        guard let width = json["width"] as? Int?,
-            let embedCode = json["embedCode"] as? String
+        guard let embedCode = json["embed_code"] as? String
             else {
                 return nil
         }
+        
+        let width = json["width"] as? Int
         
         self.width = width
         self.embedCode = embedCode
