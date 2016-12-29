@@ -14,7 +14,7 @@ public protocol SwifTumbRequestHandle {
 }
 
 public protocol SwifTumbError {
-    
+    func message() -> String
 }
 
 open class SwifTumbHttpRequest {

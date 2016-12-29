@@ -22,6 +22,16 @@ class SwifTumbTests: XCTestCase {
         super.tearDown()
     }
     
+    private func blogIdentifier() -> String {
+        let env = getenv("SWIFTUMB_BLOG_IDENTIFIER")
+        if env == nil {
+            return "ushiob.tumblr.com"
+        }
+        let bi: String? = String(utf8String: env!)
+        
+        return bi ?? "ushiob.tumblr.com"
+    }
+    
     func testBaseUrl() {
         let url: String = SwifTumb.baseUrl()
         XCTAssertEqual(url, "https://api.tumblr.com/v2")
@@ -39,7 +49,7 @@ class SwifTumbTests: XCTestCase {
             XCTAssertNotNil(response.response!.user)
             responseExpectation.fulfill()
         }) { (error) in
-            print(error)
+            XCTAssertNil(error)
         }
         XCTAssertNotNil(handle)
         
@@ -53,7 +63,7 @@ class SwifTumbTests: XCTestCase {
             XCTAssertNotNil(response.response!.posts)
             responseExpectation.fulfill()
         }) { (error) in
-            print(error)
+            XCTAssertNil(error)
         }
         XCTAssertNotNil(handle)
         
@@ -68,7 +78,7 @@ class SwifTumbTests: XCTestCase {
             XCTAssertNotNil(response.response!.likedCount)
             responseExpectation.fulfill()
         }) { (error) in
-            print(error)
+            XCTAssertNil(error)
         }
         XCTAssertNotNil(handle)
         
@@ -77,17 +87,47 @@ class SwifTumbTests: XCTestCase {
     
     func testPosts() {
         let responseExpectation = self.expectation(description: "get posts")
-        let params = SwifTumb.PostsParameters("ushio.tumblr.com")
+        let params = SwifTumb.PostsParameters(self.blogIdentifier())
         let handle = try! self.client!.posts(
             params: params,
             success: { (response: SwifTumbResponse) in
-                XCTAssertEqual(200, response.meta.status, "user posts")
+                XCTAssertEqual(200, response.meta.status, "blog posts")
                 XCTAssertNotNil(response.response!.posts)
                 XCTAssertNotNil(response.response!.blog)
                 XCTAssertNotNil(response.response!.totalPosts)
             responseExpectation.fulfill()
         }) { (error) in
-            print(error)
+            XCTAssertNil(error)
+        }
+        XCTAssertNotNil(handle)
+        
+        self.waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    func testPostReblog() {
+        let responseExpectation = self.expectation(description: "get post reblog")
+        
+        let handle = try! self.client!.userDashboard(
+            success: { (response: SwifTumbResponse) in
+                var post: SwifTumbResponse.Post
+                post = (response.response?.posts?[0])!
+                XCTAssertEqual(200, response.meta.status, "blog posts")
+                let params = SwifTumb.PostReblogParameters(
+                    self.blogIdentifier(),
+                    id: post.id, reblogKey: post.reblogKey,
+                    comment: "Test from SwifTumb unit test."
+                )
+                let handle = try! self.client!.postReblog(
+                    params: params,
+                    success: { (response: SwifTumbResponse) in
+                        XCTAssertEqual(201, response.meta.status, "post reblog")
+                        responseExpectation.fulfill()
+                }) { (error) in
+                    XCTAssertNil(error)
+                }
+                XCTAssertNotNil(handle)
+        }) { (error) in
+            XCTAssertNil(error)
         }
         XCTAssertNotNil(handle)
         

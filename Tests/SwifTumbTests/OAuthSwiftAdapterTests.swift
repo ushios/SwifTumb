@@ -45,7 +45,7 @@ class OAuthSwiftAdapterTests: XCTestCase {
             XCTAssertNotNil(resp.dataString())
             responseExpectation.fulfill()
         }) { (err: OAuthSwiftError) in
-            XCTAssertNotNil(err)
+            XCTAssertNil(err)
         }
         XCTAssertNotNil(handle)
         
