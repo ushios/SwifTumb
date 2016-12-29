@@ -1,0 +1,13 @@
+machine:
+  xcode:
+    version: "8.2"
+dependencies:
+  pre:
+    - |
+      swift --version
+      swift package generate-xcodeproj
+test:
+  pre:
+    - swift --version
+  override:
+    - swift --version
