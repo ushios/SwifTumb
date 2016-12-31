@@ -7,3 +7,5 @@ before_install:
   - swift package generate-xcodeproj
 script:
   - swift test
+notifications:
+  slack: ushios:wLQKkRtDpNIRkG4wuretSQqq
