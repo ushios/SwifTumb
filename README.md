@@ -1,6 +1,7 @@
 SwifTumb
 =========
 [![Build Status](https://travis-ci.org/ushios/SwifTumb.svg?branch=master)](https://travis-ci.org/ushios/SwifTumb)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4b083e309c4d4683b222ad1b7d51cc67)](https://www.codacy.com/app/ushios/SwifTumb?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ushios/SwifTumb&amp;utm_campaign=Badge_Grade)
 
 Tumblr client written by open source swift
 
